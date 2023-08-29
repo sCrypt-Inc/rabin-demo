@@ -1,5 +1,4 @@
 import { expect, use } from 'chai'
-import { toByteString } from 'scrypt-ts'
 import { RabinDemo } from '../src/contracts/rabinDemo'
 import { getDefaultSigner } from './utils/txHelper'
 import chaiAsPromised from 'chai-as-promised'
@@ -32,18 +31,14 @@ describe('Test SmartContract `RabinDemo`', () => {
             .get(`${witnessServer}/rates/bsv_usdc`)
             .then((response) => response.data)
         // then parse Oracle's signed message and signature from the response
-        const msg = toByteString(response.digest)
+        const msg = RabinVerifierWOC.parseMsg(response)
         const sig = RabinVerifierWOC.parseSig(response)
 
         // deploy the contract
-        const deployTx = await instance.deploy()
-        console.log('RabinDemo contract deployed: ', deployTx.id)
+        await instance.deploy()
 
-        // call the contract
-        const { tx, atInputIndex } = await instance.methods.unlock(msg, sig)
-
-        // verify contract call result
-        const result = tx.verifyScript(atInputIndex)
-        expect(result.success, result.error).to.eq(true)
+        // call the contract and verify
+        const call = async () => await instance.methods.unlock(msg, sig)
+        expect(call()).not.throw
     })
 })

@@ -47,7 +47,7 @@
     "mocha": "^10.1.0",
     "prettier": "^2.8.2",
     "rimraf": "^3.0.2",
-    "scrypt-ts-lib": "^0.1.22",
+    "scrypt-ts-lib": "^0.1.23",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
